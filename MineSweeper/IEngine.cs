@@ -6,14 +6,9 @@ namespace MineSweeper
 {
     interface IEngine
     {
-        public int GetInput();
+        GameState RunFrame();
 
-        public Board GetBoard();
-
-        public int GetState();
-
-        public void StartGame(int width, int height);
-
-        public bool IsGameStarted();
+        //TODO: Replace RunFrame with this
+        GameState RunCommand(Command cmd);
     }
 }

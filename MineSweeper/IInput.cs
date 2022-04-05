@@ -4,17 +4,26 @@ using System.Text;
 
 namespace MineSweeper
 {
+    public enum CommandType
+    {
+        DoMove,
+        
+        StartGame,
+        // args: width, height
+
+        EndGame
+    }
+
     public class Command
     {
-        bool isMoveCommand;
-        bool isRestartCommand;
+        public CommandType type;
 
+        public Dictionary<string, object> Data;
     };
 
     public interface IInput
     {
-        int GetMove();
-
-        Command GetCommand();
+        // Get next input for execution
+        Command GetNextCommand();
     }
 }

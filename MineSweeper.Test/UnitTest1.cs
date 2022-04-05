@@ -6,17 +6,81 @@ using Xunit.Abstractions;
 
 namespace MineSweeper.Test
 {
+
     public class MockInput : IInput
     {
-        private List<int> moves;
+        public List<Command> InputCommands = new List<Command>();
 
-        public MockInput()
+        public Command GetNextCommand()
         {
-            moves = new List<int>();
+            var command = InputCommands[0];
+            InputCommands.RemoveAt(0);
+            return command;
         }
-        public int GetMove()
+
+        public void QueueInput(Command command)
         {
-            throw new NotImplementedException();
+            InputCommands.Add(command);
+        }
+    }
+
+
+    public abstract class EngineInterface
+    {
+        public abstract GameState RunCommand(Command command);
+
+        public GameState StartGame(int x, int y)
+        {
+            return RunCommand(
+                new Command
+                {
+                    type = CommandType.StartGame,
+                    Data = new Dictionary<string, object>
+                    {
+                            { "width", x.ToString() },
+                            { "height", y.ToString() }
+                    }
+                }
+            );
+        }
+    }
+
+
+    public class EngineMock : Engine
+    {
+        private MockInput input;
+
+        public EngineMock() : base(new MockInput(), new RandomGenerator(0))
+        {
+            input = this._input as MockInput;
+        }
+
+        public GameState StartGame(int x, int y)
+        {
+            input.QueueInput(
+                new Command
+                {
+                    type = CommandType.StartGame,
+                    Data = new Dictionary<string, object>
+                    {
+                            { "width", x.ToString() },
+                            { "height", y.ToString() }
+                    }
+                }
+            );
+
+            //RunCommand(
+            //    new Command
+            //    {
+            //        type = CommandType.StartGame,
+            //        Data = new Dictionary<string, object>
+            //        {
+            //                { "width", x.ToString() },
+            //                { "height", y.ToString() }
+            //        }
+            //    });
+            
+            return RunFrame();
         }
     }
 
@@ -29,44 +93,45 @@ namespace MineSweeper.Test
             _logger = logger;
         }
 
+
         [Fact]
         public void CanStartGame()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame();
+            var gameState = engine.StartGame(5, 5);
 
-            Assert.True(engine.IsGameStarted());
+            Assert.True(gameState.state == GameState.State.Ingame);
         }
 
         [Fact]
         public void StartedGameHasTiles()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame();
+            var gameState = engine.StartGame(5, 5);
 
-            Assert.True(engine.Board.GetTiles().Count > 0);
+            Assert.True(gameState.Board.GetTiles().Count > 0);
         }
 
         [Fact]
         public void StartedGameHasExpectedNumTiles()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame(5 * 5);
+            var gameState = engine.StartGame(5, 5);
 
-            Assert.True(engine.Board.GetTiles().Count > 0);
+            Assert.True(gameState.Board.GetTiles().Count > 0);
         }
 
         [Fact]
         public void StartedGameHasTileWithoutMine()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame();
+            var gameState = engine.StartGame(5, 5);
 
-            foreach (var tile in engine.GetBoard().Tiles)
+            foreach (var tile in gameState.Board.Tiles)
             {
                 if (!tile.IsMine)
                     return;
@@ -78,11 +143,11 @@ namespace MineSweeper.Test
         [Fact]
         public void StartedGameHasTileWithMine()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame();
+            var gameState = engine.StartGame(5, 5);
 
-            foreach (var tile in engine.GetBoard().Tiles)
+            foreach (var tile in gameState.Board.Tiles)
             {
                 if (tile.IsMine)
                     return;
@@ -94,7 +159,9 @@ namespace MineSweeper.Test
         [Fact]
         public void StartedGameEndsWhenAllMinesRevealed()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
+
+            var gameState = engine.StartGame(5, 5);
 
             /*
              * 
@@ -106,17 +173,15 @@ namespace MineSweeper.Test
              * 
              */
 
-            engine.StartGame();
-
             Assert.True(false);
         }
 
         [Fact]
         public void StartedGameEndsWhenMineRevealed()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame();
+            var gameState = engine.StartGame(5, 5);
 
             Assert.True(false);
         }
@@ -125,17 +190,17 @@ namespace MineSweeper.Test
         [Fact]
         public void PrintBoard()
         {
-            var engine = new Engine(new MockInput(), new RandomGenerator(0));
+            var engine = new EngineMock();
 
-            engine.StartGame();
+            var gameState = engine.StartGame(5, 5);
 
-            for (int x = 0; x < engine.Board.Width; x++)
+            for (int x = 0; x < gameState.Board.Width; x++)
             {
                 var line = "";
 
-                for (int y = 0; y < engine.Board.Height; y++)
+                for (int y = 0; y < gameState.Board.Height; y++)
                 {
-                    var tile = engine.Board.GetTile(x, y);
+                    var tile = gameState.Board.GetTile(x, y);
 
                     line += tile.IsMine ? "X" : "_";
                 }
