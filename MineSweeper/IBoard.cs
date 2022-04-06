@@ -6,7 +6,7 @@ namespace MineSweeper
 {
     public interface IBoard
     {
-        public void Initialize(int width, int height);
+        public void Initialize();
 
         public void PlaceRandomMine();
 
@@ -15,6 +15,5 @@ namespace MineSweeper
         public Tile GetTile(int x, int y);
 
         public Tile GetTile(int index);
-
     }
 }

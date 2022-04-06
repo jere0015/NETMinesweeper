@@ -6,29 +6,26 @@ namespace MineSweeper
 {
     public class Board : IBoard
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="dimensions">Width and height of the board</param>
-        public Board(IRandomGenerator random)
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public List<Tile> Tiles { get; private set; }
+        private IRandomGenerator _random { get; }
+
+        public Board(IRandomGenerator random, int width, int height)
         {
-            Random = random;
+            _random = random;
+            Width = width;
+            Height = height;
             Tiles = new List<Tile>();
         }
 
-        /// <summary>
-        /// Initializes the board
-        /// </summary>
-        public void Initialize(int width, int height)
+        public void Initialize()
         {
-            Width = width;
-            Height = height;
-
             Tiles = new List<Tile>();
 
             for (int i = 0; i < Area; i++)
             {
-                var isMine = Random.RandomBool();
+                var isMine = _random.RandomBool();
 
                 Tiles.Add(new Tile(isMine));
             }
@@ -41,7 +38,7 @@ namespace MineSweeper
         {
             while (true)
             {
-                var tile = GetTile(Random.RandomInt(0, Area));
+                var tile = GetTile(_random.RandomInt(0, Area));
 
                 if (tile.IsMine)
                     continue;
@@ -51,7 +48,6 @@ namespace MineSweeper
                 break;
             }
         }
-
 
         public List<Tile> GetTiles()
         {
@@ -68,13 +64,57 @@ namespace MineSweeper
             return Tiles[(x * y) + x];
         }
 
+        // Derived
 
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public int Area { get => Width * Height; }
+        public int Area
+        {
+            get
+            {
+                return Width * Height;
+            }
+        }
 
-        public IRandomGenerator Random { get; }
-        public List<Tile> Tiles { get; private set; }
+        public int MineCount
+        {
+            get
+            {
+                int count = 0;
+                foreach(var tile in Tiles)
+                {
+                    if (tile.IsMine && !tile.IsRevealed)
+                        count++;
+                }
+                return count;
+            }
+        }
+
+        public int RevealedTilesCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (var tile in Tiles)
+                {
+                    if (tile.IsRevealed)
+                        count++;
+                }
+                return count;
+            }
+        }
+
+        public int MinesTotal
+        {
+            get
+            {
+                int count = 0;
+                foreach (var tile in Tiles)
+                {
+                    if (tile.IsMine)
+                        count++;
+
+                }
+                return count;
+            }
+        }
     }
-
 }

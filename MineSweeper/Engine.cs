@@ -4,44 +4,51 @@ using System.Text;
 
 namespace MineSweeper
 {
-    public class GameState
-    {
-        public enum State
-        {
-            None,
-            Ingame,
-            Won,
-            Lost,
-        };
-
-        public State state;
-
-        public GameState(IRandomGenerator random, int width, int height)
-        {
-            Board = new Board(random);
-
-            Board.Initialize(width, height);
-        }
-
-        public Board Board { get; private set; }
-        public List<Command> SavedCommands;
-    }
-
     public class Engine : IEngine
     {
-        protected IInput _input;
         protected IRandomGenerator _random;
         protected GameState _gameState;
 
-        /// <summary>
-        /// Construcotr
-        /// </summary>
-        public Engine(IInput input, IRandomGenerator random)
+        public Engine(IRandomGenerator random)
         {
-            _input = input;
             _random = random;
         }
 
+        public GameState RunCommand(Command cmd)
+        {
+            switch (cmd.type)
+            {
+                case CommandType.StartGame:
+                    var width = int.Parse(cmd.Data["width"] as string);
+                    var height = int.Parse(cmd.Data["height"] as string);
+                    StartGame(width, height);
+                    break;
+
+                case CommandType.EndGame:
+                    throw new NotImplementedException();
+
+                case CommandType.RevealTile:
+                    var x = int.Parse(cmd.Data["x"] as string);
+                    var y = int.Parse(cmd.Data["y"] as string);
+                    RevealMine(x, y);
+                    break;
+
+                case CommandType.GetState:
+                    // Just break so gamestate is returned
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid command ID");
+            }
+
+            return _gameState;
+        }
+
+        /// <summary>
+        /// Initializes a new board, and sets the game state to 'Ingame'
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         private void StartGame(int width = 5, int height = 5)
         {
             _gameState = new GameState(_random, width, height);
@@ -49,6 +56,12 @@ namespace MineSweeper
             _gameState.state = GameState.State.Ingame;
         }
 
+        /// <summary>
+        /// Reveals a tile on the board.
+        /// Gamestate is updated according to MineSweeper rules
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         private void RevealMine(int x, int y)
         {
             var tile = _gameState.Board.GetTile(x, y);
@@ -61,7 +74,11 @@ namespace MineSweeper
             }
             else
             {
-                return;
+                if (_gameState.Board.MineCount == _gameState.Board.RevealedTilesCount)
+                {
+                    _gameState.state = GameState.State.Won;
+                    return;
+                }
                 //TODO: Reveal surrounding mines
                 //var top_tile = _gameState.Board.GetTile(x, y - 1);
                 //var bottom_tile = _gameState.Board.GetTile(x, y + 1);
@@ -92,35 +109,5 @@ namespace MineSweeper
             }
         }
 
-
-        public GameState RunFrame()
-        {
-            var cmd = _input.GetNextCommand();
-
-            switch (cmd.type)
-            {
-                case CommandType.StartGame:
-                    var width = int.Parse(cmd.Data["width"] as string);
-                    var height = int.Parse(cmd.Data["height"] as string);
-                    StartGame(width, height);
-                    break;
-
-                case CommandType.EndGame:
-                    throw new NotImplementedException();
-
-                case CommandType.DoMove:
-                    var x = int.Parse(cmd.Data["x"] as string);
-                    var y = int.Parse(cmd.Data["y"] as string);
-                    RevealMine(x, y);
-                    break;
-            }
-
-            return _gameState;
-        }
-
-        public GameState RunCommand(Command cmd)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
