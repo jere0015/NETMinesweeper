@@ -2,9 +2,7 @@
 @inject IConfigFactory configFactory
 
 <h3>MineSweeper</h3>
-
 <button @onclick="@StartGame">Start game</button>
-
 @if (game != null)
 {
 	switch (game.State.Stage)
@@ -16,20 +14,27 @@
 					<tr>
 						@for (int y = 0; y < boardHeight; y++)
 						{
+							var tile = game.State.Board.GetTile(x, y);
+
 							//NOTE: https://stackoverflow.com/a/54813295
 							int _x = x;
 							int _y = y;
-							
-							var tile = game.State.Board.GetTile(x, y);
 
-							<td @onclick="()=>RevealTile(_x, _y)">@(tile.IsRevealed ? tile.IsMine ? "X" : "_" : "?"),</td>
+							<td @onclick="()=>RevealTile(_x, _y)">
+								@(tile.IsRevealed ? (tile.IsMine ? "X": tile.NeighbourghsMineCount()) : "?"),
+							</td>
 						}
 					</tr>
 				}
 			</table>
 			break;
+
 		case Stage.Lost:
 			<div>You lost!</div>
+			break;
+
+		case Stage.Won:
+			<div>You win!</div>
 			break;
 	}
 }

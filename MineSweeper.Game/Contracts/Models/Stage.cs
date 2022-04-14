@@ -13,5 +13,6 @@
 
         // The user lost the game
         Lost,
-    };
+        Won,
+    }
 }

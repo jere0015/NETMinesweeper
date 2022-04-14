@@ -7,6 +7,16 @@ namespace MineSweeper.Game
     public static class TileHelper
     {
         /// <summary>
+        /// Get the count of neighbourgh tiles who contain a main
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns>Count of neighbouring mine tiles</returns>
+        public static int NeighbourghsMineCount(this ITile tile)
+        {
+            return tile.Neighbourghs().Where(tile => tile.IsMine).Count();
+        }
+
+        /// <summary>
         /// Get the tile above this tile
         /// </summary>
         /// <param name="tile"></param>
@@ -68,7 +78,7 @@ namespace MineSweeper.Game
         }
 
         /// <summary>
-        /// Get this tiles' neighbourghs. (Up, Down, Left, Right)
+        /// Get this tiles' neighbourghs.
         /// </summary>
         /// <param name="tile"></param>
         /// <returns>An enumerable of neighbourghing tiles</returns>
@@ -77,24 +87,18 @@ namespace MineSweeper.Game
             var neighbourghs = new List<ITile?>()
             {
                 tile.Up(),
+                tile.Up()?.Left(),
+                tile.Up()?.Right(),
+
                 tile.Down(),
+                tile.Down()?.Left(),
+                tile.Down()?.Right(),
+
                 tile.Left(),
                 tile.Right(),
             };
 
-            //NOTE: Visual studio sees this as a 'redundant cast' - I think that's a bug
-            return neighbourghs.FindAll((tile) => tile is not null) as List<ITile>;
+            return neighbourghs.Where((tile) => tile is not null) as IEnumerable<ITile>;
         }
-
-        /// <summary>
-        /// Checks if this tile has any neighbourghing tile with a mine
-        /// </summary>
-        /// <param name="tile"></param>
-        /// <returns>True if neighbourghing tile has mine</returns>
-        public static bool HasNeighbourghingMine(this ITile tile)
-        {
-            return tile.Neighbourghs().FirstOrDefault((tile) => tile.IsMine) != null;
-        }
-
     }
 }

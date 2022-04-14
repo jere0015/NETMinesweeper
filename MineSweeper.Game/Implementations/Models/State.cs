@@ -9,6 +9,7 @@
         public State(IBoard board, IConfig config)
         {
             Board = board;
+
             Config = config;
         }
     }

@@ -27,23 +27,33 @@
 
             var tile = State.Board.GetTile(x, y);
 
-            tile.IsRevealed = true;
+            if (tile.IsRevealed == false)
+            {
+                tile.IsRevealed = true;
 
-            if (tile.IsMine)
-            {
-                State.Stage = Stage.Lost;
-            }
-            else
-            {
-                if (tile.HasNeighbourghingMine() == false)
+                if (tile.IsMine)
                 {
-                    foreach (var neighbourgh in tile.Neighbourghs())
+                    State.Stage = Stage.Lost;
+                }
+                else
+                {
+                    // If any neighbourgh is not a mine
+                    if (tile.Neighbourghs().Any((tile) => tile.IsMine) == false)
                     {
-                        if (neighbourgh.IsRevealed == false)
+                        // Reveal all unrevealed neighbourghs
+                        tile.Neighbourghs().ToList().ForEach(_tile =>
                         {
-                            RevealTile(neighbourgh.X, neighbourgh.Y);
-                        }
+                            if (_tile.IsRevealed is false)
+                            {
+                                RevealTile(_tile.X, _tile.Y);
+                            }
+                        });
                     }
+                }
+
+                if(State.Board.Tiles.Where(tile => !tile.IsRevealed && !tile.IsMine).Count() == 0)
+                {
+                    State.Stage = Stage.Won;
                 }
             }
 

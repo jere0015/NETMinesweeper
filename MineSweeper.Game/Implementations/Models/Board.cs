@@ -11,7 +11,7 @@
         public Board(ITileFactory tileFactory, MineGenerator mineGenerator, int width, int height)
         {
             var tiles = new List<ITile>();
-
+            
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)

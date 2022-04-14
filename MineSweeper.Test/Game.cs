@@ -108,7 +108,8 @@ namespace MineSweeper.Test
             var game = Instance();
 
             /*
-             * Expects this board:
+             * Test expects this board:
+             * 
              *     X,_,_,_,_,
              *     _,_,X,_,X,
              *     _,_,_,X,_,
