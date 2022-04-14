@@ -101,6 +101,29 @@ namespace MineSweeper.Test
 
             Assert.True(game.State.Stage == Stage.Active);
         }
+
+        [Fact]
+        public void MinesRevealRecursivly()
+        {
+            var game = Instance();
+
+            /*
+             * Expects this board:
+             *     X,_,_,_,_,
+             *     _,_,X,_,X,
+             *     _,_,_,X,_,
+             *     _,X,_,_,_, <- 4,3
+             *     _,_,_,_,_, <- 4,4
+             *             ^
+             *             |
+             *            3,4
+            */
+
+            game.RevealTile(4, 4);
+
+            Assert.True(game.State.Board.GetTile(4, 3).IsRevealed && game.State.Board.GetTile(3, 4).IsRevealed);
+        }
+
         [Fact]
         public void PrintBoard()
         {

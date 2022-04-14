@@ -30,14 +30,9 @@ namespace MineSweeper.Game
         /// <param name="x">X coordinate of the tile</param>
         /// <param name="y">Y coordinate of the tile</param>
         /// <returns>True if valid coordinates</returns>
-        public static bool IsValidTileCoordinates(this IBoard board, int x, int y)
+        public static bool IsValidBoardCoordinates(this IBoard board, int x, int y)
         {
-            var index = (x * y) + x;
-
-            if (index < 0 || index >= board.Tiles.Count())
-                return false;
-
-            return true;
+            return x < board.Width && x >= 0 && y < board.Height && y >= 0;
         }
     }
 }

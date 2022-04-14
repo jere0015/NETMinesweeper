@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+builder.Services.AddScoped<IConfigFactory, ConfigFactory>();
 builder.Services.AddScoped<IBoardFactory, BoardFactory>();
 builder.Services.AddScoped<ITileFactory, TileFactory>();
 builder.Services.AddScoped<IStateFactory, StateFactory>();

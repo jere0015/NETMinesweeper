@@ -1,35 +1,38 @@
 ﻿@inject IGameFactory gameFactory
+@inject IConfigFactory configFactory
 
 <h3>MineSweeper</h3>
 
 <button @onclick="@StartGame">Start game</button>
 
-<table>
-	@if (game != null)
+@if (game != null)
+{
+	switch (game.State.Stage)
 	{
-		if (game.State.Stage == Stage.Lost)
-		{
-			<p>You lost!</p>
-		}
-		else
-		{
-			@for (var x = 0; x < boardWidth; x++)
-			{
-				<tr>
-					@for (int y = 0; y < boardHeight; y++)
-					{
-						// scoped variable is needed https://stackoverflow.com/a/54813295
-						int _x = x;
-						int _y = y;
-						var tile = game.State.Board.GetTile(_x, _y);
+		case Stage.Active:
+			<table>
+				@for (var x = 0; x < boardWidth; x++)
+				{
+					<tr>
+						@for (int y = 0; y < boardHeight; y++)
+						{
+							//NOTE: https://stackoverflow.com/a/54813295
+							int _x = x;
+							int _y = y;
+							
+							var tile = game.State.Board.GetTile(x, y);
 
-						<td @onclick="()=>RevealTile(_x, _y)">@(tile.IsRevealed ? tile.IsMine ? "X" : "_" : "?"),</td>
-					}
-				</tr>
-			}
-		}
+							<td @onclick="()=>RevealTile(_x, _y)">@(tile.IsRevealed ? tile.IsMine ? "X" : "_" : "?"),</td>
+						}
+					</tr>
+				}
+			</table>
+			break;
+		case Stage.Lost:
+			<div>You lost!</div>
+			break;
 	}
-</table>
+}
 
 @code {
 	// Game instance
@@ -44,7 +47,9 @@
 	// Handlers
 	void StartGame()
 	{
-		game = gameFactory.Create(new Config(boardWidth, boardHeight, seed, difficulity));
+		var config = configFactory.Create(boardWidth, boardHeight, seed, difficulity);
+
+		game = gameFactory.Create(config);
 	}
 
 	void RevealTile(int x, int y)
@@ -52,7 +57,6 @@
 		if (game != null && game.State.Stage != Stage.Lost)
 		{
 			var state = game.RevealTile(x, y);
-
 		}
 	}
 }

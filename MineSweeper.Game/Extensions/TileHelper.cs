@@ -56,11 +56,10 @@ namespace MineSweeper.Game
         /// <returns>Tile if inbounds, null if out of bounds</returns>
         public static ITile? Neighbourgh(this ITile tile, int x_offset, int y_offset)
         {
-            //BUG: OOB
             var x = tile.X + x_offset;
             var y = tile.Y + y_offset;
 
-            if (tile.Parent.IsValidTileCoordinates(x, y))
+            if (tile.Parent.IsValidBoardCoordinates(x, y))
             {
                 return tile.Parent.GetTile(x, y);
             }
@@ -75,21 +74,16 @@ namespace MineSweeper.Game
         /// <returns>An enumerable of neighbourghing tiles</returns>
         public static IEnumerable<ITile> Neighbourghs(this ITile tile)
         {
-            var neighbourghs = new List<ITile>();
-            var offsets = new List<int>() { 1, -1 };
-
-            //BUG: OOB
-            foreach (var offset in offsets)
+            var neighbourghs = new List<ITile?>()
             {
-                tile.Neighbourgh(offset, 0);
-            }
+                tile.Up(),
+                tile.Down(),
+                tile.Left(),
+                tile.Right(),
+            };
 
-            foreach (var offset in offsets)
-            {
-                tile.Neighbourgh(0, offset);
-            }
-
-            return neighbourghs;
+            //NOTE: Visual studio sees this as a 'redundant cast' - I think that's a bug
+            return neighbourghs.FindAll((tile) => tile is not null) as List<ITile>;
         }
 
         /// <summary>
