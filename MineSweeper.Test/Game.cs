@@ -113,16 +113,25 @@ namespace MineSweeper.Test
              *     X,_,_,_,_,
              *     _,_,X,_,X,
              *     _,_,_,X,_,
-             *     _,X,_,_,_, <- 4,3
-             *     _,_,_,_,_, <- 4,4
-             *             ^
-             *             |
-             *            3,4
+             *     _,X,_,_,_,
+             *     _,_,_,_,_,
+             *     
             */
 
             game.RevealTile(4, 4);
 
-            Assert.True(game.State.Board.GetTile(4, 3).IsRevealed && game.State.Board.GetTile(3, 4).IsRevealed);
+            // After revealing expect the 6 cells in the cornor to be revealed
+            var coordinates = new List<(int, int)>()
+            {
+               (4, 3), (3, 4), (4, 2), (3, 2)
+            };
+
+            coordinates.ForEach(coordinateSet =>
+            {
+                (int x, int y) = coordinateSet;
+
+                Assert.True(game.State.Board.GetTile(x, y).IsRevealed, $"{x} {y} Failed");
+            });
         }
 
         [Fact]
