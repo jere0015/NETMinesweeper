@@ -18,7 +18,7 @@
                 {
                     var isMine = mineGenerator(x, y);
 
-                    tiles.Add(tileFactory.Create(this, x, y, isMine));
+                    tiles.Add(tileFactory.Create(x, y, isMine));
                 }
             }
 

@@ -24,15 +24,17 @@ namespace MineSweeper.Game
         }
 
         /// <summary>
-        /// Checks if X and Y are valid board coordinates
+        /// Get tiles neighbourghing a board coordinate set
         /// </summary>
-        /// <param name="board"></param>
-        /// <param name="x">X coordinate of the tile</param>
-        /// <param name="y">Y coordinate of the tile</param>
-        /// <returns>True if valid coordinates</returns>
-        public static bool IsValidBoardCoordinates(this IBoard board, int x, int y)
+        /// <param name="tile"></param>
+        /// <returns>An enumerable of neighbourghing tiles</returns>
+        public static IEnumerable<ITile> GetNeighbourghTiles(this IBoard board, int x, int y)
         {
-            return x < board.Width && x >= 0 && y < board.Height && y >= 0;
+            // Find neighbourghs by comparing X and Y value differences
+            var Diff = (int value1, int value2) => Math.Abs(value1 - value2);
+            
+            // All tiles where difference on X or Y axis is 1 or below 0, and disclude tile at X and Y
+            return board.Tiles.Where((tile) => Diff(tile.X, x) <= 1 && Diff(tile.Y, y) <= 1 && !(tile.X == x && tile.Y == y));
         }
     }
 }

@@ -38,10 +38,12 @@
                 else
                 {
                     // If any neighbourgh is not a mine
-                    if (tile.Neighbourghs().Any((tile) => tile.IsMine) == false)
+                    var neighbourghs = State.Board.GetNeighbourghTiles(x, y);
+
+                    if (neighbourghs.Any((tile) => tile.IsMine) == false)
                     {
                         // Reveal all unrevealed neighbourghs
-                        tile.Neighbourghs().ToList().ForEach(_tile =>
+                        neighbourghs.ToList().ForEach(_tile =>
                         {
                             if (_tile.IsRevealed is false)
                             {
@@ -51,7 +53,7 @@
                     }
                 }
 
-                if(State.Board.Tiles.Where(tile => !tile.IsRevealed && !tile.IsMine).Count() == 0)
+                if (State.Board.Tiles.Where(tile => !tile.IsRevealed && !tile.IsMine).Count() == 0)
                 {
                     State.Stage = Stage.Won;
                 }

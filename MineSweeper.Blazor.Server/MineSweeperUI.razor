@@ -21,7 +21,7 @@
 							int _y = y;
 
 							<td @onclick="()=>RevealTile(_x, _y)">
-								@(tile.IsRevealed ? (tile.IsMine ? "X": tile.NeighbourghsMineCount()) : "?"),
+								@(tile.IsRevealed ? (tile.IsMine ? "X": game.State.Board.GetNeighbourghTiles(x, y).Where(_tile => _tile.IsMine).Count()) : "?"),
 							</td>
 						}
 					</tr>

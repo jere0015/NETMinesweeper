@@ -10,7 +10,7 @@
         public Config(int boardWidth, int boardHeight, int seed, Difficulity difficulity)
         {
             BoardWidth = boardWidth;
-
+            
             BoardHeight = boardHeight;
 
             Seed = seed;

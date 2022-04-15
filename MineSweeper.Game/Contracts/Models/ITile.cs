@@ -12,11 +12,6 @@ namespace MineSweeper.Game
     public interface ITile
     {
         /// <summary>
-        /// The parent who this tile belongs to
-        /// </summary>
-        public IBoard Parent { get;}
-
-        /// <summary>
         /// The X coordinate of the tile
         /// </summary>
         public int X { get; }

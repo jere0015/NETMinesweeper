@@ -2,9 +2,9 @@
 {
     public class TileFactory : ITileFactory
     {
-        public ITile Create(IBoard parent, int x, int y, bool isMine)
+        public ITile Create(int x, int y, bool isMine)
         {
-            return new Tile(parent, x, y, isMine);
+            return new Tile(x, y, isMine);
         }
     }
 }

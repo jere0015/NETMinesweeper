@@ -2,6 +2,6 @@
 {
     public interface ITileFactory
     {
-        public ITile Create(IBoard parent, int x, int y, bool isMine);
+        public ITile Create(int x, int y, bool isMine);
     }
 }
