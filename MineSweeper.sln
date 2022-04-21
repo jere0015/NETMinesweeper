@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper", "MineSweeper\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.Test", "MineSweeper.Test\MineSweeper.Test.csproj", "{6613E6EE-F225-48C3-87CD-AD5501113E64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSweeper.Blazor", "MineSweeper.Blazor\MineSweeper.Blazor.csproj", "{B41F2C00-4BFB-4B8B-BDFD-5A114D85CAFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.Blazor", "MineSweeper.Blazor\MineSweeper.Blazor.csproj", "{B41F2C00-4BFB-4B8B-BDFD-5A114D85CAFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSweeper.API", "MineSweeper.API\MineSweeper.API.csproj", "{BB7FEA75-1A5A-4150-B061-30C8BBC210DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.API", "MineSweeper.API\MineSweeper.API.csproj", "{BB7FEA75-1A5A-4150-B061-30C8BBC210DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

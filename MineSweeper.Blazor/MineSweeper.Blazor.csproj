@@ -4,4 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\LeaderboardData.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\LeaderboardData.cs" />
+  </ItemGroup>
+
 </Project>

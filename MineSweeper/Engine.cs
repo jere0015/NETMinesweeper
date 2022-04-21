@@ -54,7 +54,7 @@ namespace MineSweeper
             {
                 var move = Input.GetMove();
 
-                move.x
+                move.x;
                 move.y;
 
                 var tile = Board.GetTile(move.x, move.y);
