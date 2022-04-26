@@ -1,9 +1,10 @@
-﻿@inject IGameFactory gameFactory
+﻿@inject ILogger<MineSweeperUI> logger
+@inject IGameFactory gameFactory
 @inject IConfigFactory configFactory
 
 <h3>MineSweeper</h3>
 <button @onclick="@StartGame">Start game</button>
-@if (game != null)
+@if (game.State != null)
 {
 	switch (game.State.Stage)
 	{
@@ -20,8 +21,12 @@
 							int _x = x;
 							int _y = y;
 
-							<td @onclick="()=>RevealTile(_x, _y)">
-								@(tile.IsRevealed ? (tile.IsMine ? "X": game.State.Board.GetNeighbourghTiles(x, y).Where(_tile => _tile.IsMine).Count()) : "?"),
+							<td @onclick="()=>RevealTile(_x, _y)" 
+								@oncontextmenu="()=>PlaceFlag(_x, _y)" 
+								@oncontextmenu:preventDefault="true">
+								@(tile.IsRevealed ? 
+									(tile.IsMine ? "X" : game.State.Board.GetNeighbourghMineCount(_x, _y)) 
+								: "?"),
 							</td>
 						}
 					</tr>
@@ -40,28 +45,45 @@
 }
 
 @code {
-	// Game instance
-	IGame? game = null;
+    // Game instance
+    IGame game;
 
-	// Config variables
-	int boardWidth = 5;
-	int boardHeight = 5;
+    // Config variables
+    int boardWidth = 5;
+    int boardHeight = 5;
 	int seed = 0;
 	Difficulity difficulity = Difficulity.Easy;
+	
+    public MineSweeperUI(IGameFactory gameFactory)
+    {
+        game = gameFactory.Create();
+    }
 
 	// Handlers
 	void StartGame()
 	{
 		var config = configFactory.Create(boardWidth, boardHeight, seed, difficulity);
 
-		game = gameFactory.Create(config);
+		game.StartGame(config);
 	}
 
 	void RevealTile(int x, int y)
 	{
-		if (game != null && game.State.Stage != Stage.Lost)
+		if (game.State != null && game.State.Stage != Stage.Lost)
 		{
-			var state = game.RevealTile(x, y);
+			logger.LogInformation($"Revealing tile at {x} {y}");
+
+			game.RevealTile(x, y);
+		}
+	}
+
+	void PlaceFlag(int x, int y)
+	{
+		if (game.State != null && game.State.Stage != Stage.Lost)
+		{
+			logger.LogInformation($"Placing flag at {x} {y}");
+
+			// game.ToggleFlag(x, y);
 		}
 	}
 }

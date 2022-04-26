@@ -36,5 +36,15 @@ namespace MineSweeper.Game
             // All tiles where difference on X or Y axis is 1 or below 0, and disclude tile at X and Y
             return board.Tiles.Where((tile) => Diff(tile.X, x) <= 1 && Diff(tile.Y, y) <= 1 && !(tile.X == x && tile.Y == y));
         }
+
+        /// <summary>
+        /// Get tiles neighbourghing a board coordinate set
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns>An enumerable of neighbourghing tiles</returns>
+        public static int GetNeighbourghMineCount(this IBoard board, int x, int y)
+        {
+            return board.GetNeighbourghTiles(x, y).Where(_tile => _tile.IsMine).Count();
+        }
     }
 }

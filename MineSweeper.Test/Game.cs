@@ -8,10 +8,13 @@ namespace MineSweeper.Test
     public class GameTest
     {
         private readonly ITestOutputHelper _logger;
+        private readonly IConfig _config;
 
         public GameTest(ITestOutputHelper logger)
         {
             _logger = logger;
+
+            _config = new Config(5, 5, 0, Difficulity.Easy);
         }
 
         public IGame Instance()
@@ -20,9 +23,12 @@ namespace MineSweeper.Test
             var tileFactory = new TileFactory();
             var boardFactory = new BoardFactory(tileFactory);
             var gameFactory = new GameFactory(stateFactory, boardFactory);
-            var config = new Config(5, 5, 0, Difficulity.Easy);
 
-            return gameFactory.Create(config);
+            var game = gameFactory.Create();
+
+            game.StartGame(_config);
+
+            return game;
         }
 
         [Fact]

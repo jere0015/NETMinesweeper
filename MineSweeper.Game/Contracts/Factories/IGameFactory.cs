@@ -8,6 +8,6 @@ namespace MineSweeper.Game
 {
     public interface IGameFactory
     {
-        IGame Create(IConfig config);
+        IGame Create();
     }
 }

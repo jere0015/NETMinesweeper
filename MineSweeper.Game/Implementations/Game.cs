@@ -2,25 +2,31 @@
 {
     public class Game : IGame
     {
-        public IState State { get; }
-        public IConfig Config { get; }
+        public IState? State { get; private set; }
+        public IStateFactory StateFactory { get; }
+        public IBoardFactory BoardFactory { get; }
 
-        public Game(IStateFactory stateFactory, IBoardFactory boardFactory, IConfig config)
+        public Game(IStateFactory stateFactory, IBoardFactory boardFactory)
         {
-            Config = config;
+            StateFactory = stateFactory;
 
-            var board = boardFactory.Create(config.BoardWidth, config.BoardHeight, IsMine);
+            BoardFactory = boardFactory;
+        }
 
-            var state = stateFactory.Create(config, board);
+        public IState StartGame(IConfig config)
+        {
+            var board = BoardFactory.Create(config.BoardWidth, config.BoardHeight, (x, y) => IsMine(x, y, config.Seed));
 
-            State = state;
+            State = StateFactory.Create(config, board);
 
             State.Stage = Stage.Active;
+
+            return State;
         }
 
         public IState RevealTile(int x, int y)
         {
-            if (State.Stage != Stage.Active)
+            if (State == null || State.Stage != Stage.Active)
             {
                 throw new InvalidOperationException();
             }
@@ -68,10 +74,10 @@
         /// <param name="x">X board coordinate</param>
         /// <param name="y">Y board coordinate</param>
         /// <returns>True if supposed to have a mine, false if not</returns>
-        private bool IsMine(int x, int y)
+        private static bool IsMine(int x, int y, int seed)
         {
             // Base RNG of Seed + X coordinate + Y coordinate
-            var random = new Random(Config.Seed + ((x + 0x5c4931ea) * (x + 1)) * (y + 0x7f29e92c) * (y + 1));
+            var random = new Random(seed + ((x + 0x5c4931ea) * (x + 1)) * (y + 0x7f29e92c) * (y + 1));
 
             return random.Next(0, 4) == 0;
         }

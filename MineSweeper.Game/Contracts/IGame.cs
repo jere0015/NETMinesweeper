@@ -8,7 +8,14 @@
         /// <summary>
         /// Accessor for current state of the game.
         /// </summary>
-        public IState State { get; }
+        public IState? State { get; }
+
+        /// <summary>
+        /// Starts a new game
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns>Initial gamestate</returns>
+        public IState StartGame(IConfig config);
 
         /// <summary>
         /// Reveal a tile on the board

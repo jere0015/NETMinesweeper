@@ -17,9 +17,9 @@ namespace MineSweeper.Game
             BoardFactory = boardFactory;
         }
 
-        public IGame Create(IConfig config)
+        public IGame Create()
         {
-            return new Game(StateFactory, BoardFactory, config);
+            return new Game(StateFactory, BoardFactory);
         }
     }
 }
