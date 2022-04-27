@@ -8,18 +8,14 @@ namespace MineSweeper.Game
 {
     public class GameFactory : IGameFactory
     {
-        public IStateFactory StateFactory { get; }
-        public IBoardFactory BoardFactory { get; }
-
-        public GameFactory(IStateFactory stateFactory, IBoardFactory boardFactory)
-        {
-            StateFactory = stateFactory;
-            BoardFactory = boardFactory;
-        }
-
         public IGame Create()
         {
-            return new Game(StateFactory, BoardFactory);
+            return new Game();
+        }
+
+        public IGame Create(Config config)
+        {
+            return new Game(config);
         }
     }
 }

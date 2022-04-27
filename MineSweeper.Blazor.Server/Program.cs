@@ -8,10 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddSingleton<IConfigFactory, ConfigFactory>();
-builder.Services.AddSingleton<IBoardFactory, BoardFactory>();
-builder.Services.AddSingleton<ITileFactory, TileFactory>();
-builder.Services.AddSingleton<IStateFactory, StateFactory>();
 builder.Services.AddSingleton<IGameFactory, GameFactory>();
 
 var app = builder.Build();

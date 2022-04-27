@@ -2,79 +2,77 @@
 {
     public class Game : IGame
     {
-        public IState? State { get; private set; }
-        public IStateFactory StateFactory { get; }
-        public IBoardFactory BoardFactory { get; }
+        public State State { get; set; }
 
-        public Game(IStateFactory stateFactory, IBoardFactory boardFactory)
+        public Game()
         {
-            StateFactory = stateFactory;
+            var defaultConfig = new Config(10, 10, (int)DateTime.Now.Ticks, Difficulity.Easy);
 
-            BoardFactory = boardFactory;
+            State = CreateState(defaultConfig);
         }
 
-        public IState StartGame(IConfig config)
+        public Game(Config config)
         {
-            var board = BoardFactory.Create(config.BoardWidth, config.BoardHeight, (x, y) => IsMine(x, y, config.Seed));
-
-            State = StateFactory.Create(config, board);
-
-            State.Stage = Stage.Active;
-
-            return State;
+            State = CreateState(config);
+        }
+        public Game(State state)
+        {
+            State = state;
         }
 
-        public IState RevealTile(int x, int y)
+        public void RevealTile(int x, int y)
         {
-            if (State == null || State.Stage != Stage.Active)
-            {
-                throw new InvalidOperationException();
-            }
+            var tile = State.Board.Tiles.First(_ => _.X == x && _.Y == y);
 
-            var tile = State.Board.GetTile(x, y);
-
-            if (tile.IsRevealed == false)
+            if (!tile.IsRevealed)
             {
                 tile.IsRevealed = true;
 
-                if (tile.IsMine)
+                foreach (var neighbourgh in tile.Neighbourghs(State.Board))
                 {
-                    State.Stage = Stage.Lost;
-                }
-                else
-                {
-                    // If any neighbourgh is not a mine
-                    var neighbourghs = State.Board.GetNeighbourghTiles(x, y);
-
-                    if (neighbourghs.Any((tile) => tile.IsMine) == false)
+                    if (neighbourgh.Neighbourghs(State.Board).Any(_ => _.IsMine) is false)
                     {
-                        // Reveal all unrevealed neighbourghs
-                        neighbourghs.ToList().ForEach(_tile =>
-                        {
-                            if (_tile.IsRevealed is false)
-                            {
-                                RevealTile(_tile.X, _tile.Y);
-                            }
-                        });
+                        neighbourgh.Neighbourghs(State.Board).ToList().ForEach(_ => RevealTile(_.X, _.Y));
                     }
-                }
 
-                if (State.Board.Tiles.Where(tile => !tile.IsRevealed && !tile.IsMine).Count() == 0)
-                {
-                    State.Stage = Stage.Won;
                 }
+                UpdateStage();
             }
-
-            return State;
         }
 
-        /// <summary>
-        /// Checks if X and Y coordinate is supposed to contain a mine, depending on RNG seed
-        /// </summary>
-        /// <param name="x">X board coordinate</param>
-        /// <param name="y">Y board coordinate</param>
-        /// <returns>True if supposed to have a mine, false if not</returns>
-        private static bool IsMine(int x, int y, int seed)
+        public void ToggleFlag(int x, int y)
+        {
+            var tile = State.Board.Tiles.First(_ => _.X == x && _.Y == y);
+
+            if (!tile.IsRevealed)
+            {
+                tile.IsFlagged = !tile.IsFlagged;
+
+                UpdateStage();
+            }
+        }
+
+
+        private void UpdateStage()
+        {
+            // Loss condition
+            if (State.Board.Tiles.Any(_ => _.IsRevealed && _.IsMine))
+            {
+                State.Stage = Stage.Lost;
+
+                return;
+            }
+
+            // Win condition
+            if (State.Board.Tiles.All(_ => (_.IsRevealed || _.IsFlagged)))
+            {
+                State.Stage = Stage.Won;
+                
+                return;
+            }
+        }
+
+        private static bool RollMine(int x, int y, int seed)
         {
             // Base RNG of Seed + X coordinate + Y coordinate
             var random = new Random(seed + ((x + 0x5c4931ea) * (x + 1)) * (y + 0x7f29e92c) * (y + 1));
@@ -82,23 +80,21 @@
             return random.Next(0, 4) == 0;
         }
 
-        public IState ToggleFlag(int x, int y)
+        private static State CreateState(Config config)
         {
-            if (State == null || State.Stage != Stage.Active)
+            var tiles = new List<Tile>();
+
+            for (int x = 0; x < config.BoardWidth; x++)
             {
-                throw new InvalidOperationException();
+                for (int y = 0; y < config.BoardHeight; y++)
+                {
+                    tiles.Add(new Tile(x, y, RollMine(x, y, config.Seed)));
+                }
             }
 
-            var tile = State.Board.GetTile(x, y);
+            var board = new Board(tiles, config.BoardWidth, config.BoardHeight);
 
-            if(tile.IsRevealed)
-            {
-                throw new InvalidOperationException("Cannot place flags on revealed tiles");
-            }
-
-            tile.IsFlagged = !tile.IsFlagged;
-
-            return State;
+            return new State(Stage.Playing, board, config);
         }
     }
 }

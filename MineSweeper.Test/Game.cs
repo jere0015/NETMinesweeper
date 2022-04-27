@@ -8,7 +8,7 @@ namespace MineSweeper.Test
     public class GameTest
     {
         private readonly ITestOutputHelper _logger;
-        private readonly IConfig _config;
+        private readonly Config _config;
 
         public GameTest(ITestOutputHelper logger)
         {
@@ -19,14 +19,7 @@ namespace MineSweeper.Test
 
         public IGame Instance()
         {
-            var stateFactory = new StateFactory();
-            var tileFactory = new TileFactory();
-            var boardFactory = new BoardFactory(tileFactory);
-            var gameFactory = new GameFactory(stateFactory, boardFactory);
-
-            var game = gameFactory.Create();
-
-            game.StartGame(_config);
+            var game = new Game.Game(_config);
 
             return game;
         }
@@ -36,7 +29,7 @@ namespace MineSweeper.Test
         {
             var game = Instance();
 
-            Assert.True(game.State.Stage == Stage.Active);
+            Assert.True(game.State.Stage == Stage.Playing);
         }
 
 
@@ -105,7 +98,7 @@ namespace MineSweeper.Test
 
             game.RevealTile(nonMineTile.X, nonMineTile.Y);
 
-            Assert.True(game.State.Stage == Stage.Active);
+            Assert.True(game.State.Stage == Stage.Playing);
         }
 
         [Fact]
@@ -136,7 +129,7 @@ namespace MineSweeper.Test
             {
                 (int x, int y) = coordinateSet;
 
-                Assert.True(game.State.Board.GetTile(x, y).IsRevealed, $"{x} {y} Failed");
+                Assert.True(game.State.Board.Tiles.First(_ => _.X == x && _.Y == y).IsRevealed, $"{x} {y} Failed");
             });
         }
 
@@ -151,7 +144,7 @@ namespace MineSweeper.Test
 
                 for (int y = 0; y < game.State.Board.Height; y++)
                 {
-                    var tile = game.State.Board.GetTile(x, y);
+                    var tile = game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
 
                     line += tile.IsMine ? "X," : "_,";
                 }

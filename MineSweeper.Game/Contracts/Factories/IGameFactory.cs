@@ -9,5 +9,6 @@ namespace MineSweeper.Game
     public interface IGameFactory
     {
         IGame Create();
+        IGame Create(Config config);
     }
 }

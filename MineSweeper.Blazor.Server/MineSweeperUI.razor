@@ -1,21 +1,20 @@
-﻿@inject ILogger<MineSweeperUI> logger
-@inject IGameFactory gameFactory
-@inject IConfigFactory configFactory
+﻿@inject ILogger<MineSweeperUI> _logger
+@inject IGameFactory _gameFactory
 
 <h3>MineSweeper</h3>
 <button @onclick="@StartGame">Start game</button>
-@if (game.State != null)
+@if (game?.State != null)
 {
 	switch (game.State.Stage)
 	{
-		case Stage.Active:
+		case Stage.Playing:
 			<table>
-				@for (var x = 0; x < boardWidth; x++)
+				@for (var x = 0; x < game.State.Board.Width; x++)
 				{
 					<tr>
-						@for (int y = 0; y < boardHeight; y++)
+						@for (int y = 0; y < game.State.Board.Height; y++)
 						{
-							var tile = game.State.Board.GetTile(x, y);
+							var tile = game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
 
 							//NOTE: https://stackoverflow.com/a/54813295
 							int _x = x;
@@ -28,22 +27,22 @@
 								{
 									if (tile.IsMine)
 									{
-										<div>X</div>
+										<div>X,</div>
 									}
 									else
 									{
-										<div>@game.State.Board.GetNeighbourghMineCount(_x, _y)</div>
+										<div>@tile.Neighbourghs(game.State.Board).Where(_ => _.IsMine).Count()</div>
 									}
 								}
 								else // Tile not revealed
 								{
 									if (tile.IsFlagged)
 									{
-										<div>F</div>
+										<div>F,</div>
 									}
 									else
 									{
-										<div>?</div>
+										<div>?,</div>
 									}
 								}
 							</td>
@@ -64,36 +63,22 @@
 }
 
 @code {
-	#pragma warning disable CS8618
-	// Game instance
-	IGame game;
-#pragma warning restore CS8618
+	
+	IGame? game = null;
+	
+	Config config = new Config(5, 5, 0, Difficulity.Easy);
 
-	// Config variables
-	int boardWidth = 5;
-	int boardHeight = 5;
-	int seed = 0;
-	Difficulity difficulity = Difficulity.Easy;
-
-	// Constructor
-	protected override void OnInitialized()
-	{
-		game = gameFactory.Create();
-	}
-
-	// Handlers
+	// Handlerss
 	void StartGame()
 	{
-		var config = configFactory.Create(boardWidth, boardHeight, seed, difficulity);
-
-		game.StartGame(config);
+		game = _gameFactory.Create(config);
 	}
 
 	void RevealTile(int x, int y)
 	{
-		if (game.State?.Stage != Stage.Lost)
+		if (game?.State.Stage == Stage.Playing)
 		{
-			logger.LogInformation($"Revealing tile at {x} {y}");
+			_logger.LogInformation($"Revealing tile at {x} {y}");
 
 			game.RevealTile(x, y);
 		}
@@ -101,9 +86,9 @@
 
 	void PlaceFlag(int x, int y)
 	{
-		if (game.State?.Stage != Stage.Lost)
+		if (game?.State.Stage == Stage.Playing)
 		{
-			logger.LogInformation($"Placing flag at {x} {y}");
+			_logger.LogInformation($"Placing flag at {x} {y}");
 
 			game.ToggleFlag(x, y);
 		}

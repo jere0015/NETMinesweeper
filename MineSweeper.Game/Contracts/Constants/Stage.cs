@@ -5,14 +5,12 @@
     /// </summary>
     public enum Stage
     {
-        // Start stage
-        Initial,
-
         // The user is currently playing the game
-        Active,
+        Playing,
 
         // The user lost the game
         Lost,
+
         Won,
     }
 }
