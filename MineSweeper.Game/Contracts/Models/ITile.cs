@@ -30,5 +30,10 @@ namespace MineSweeper.Game
         /// Tells whether this tile has been revealed
         /// </summary>
         public bool IsRevealed { get; set; }
+
+        /// <summary>
+        /// Tells whether this tile has a flag on it
+        /// </summary>
+        public bool IsFlagged { get; set; }
     }
 }

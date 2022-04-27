@@ -24,5 +24,13 @@
         /// <param name="y">Y coordinate of the tile</param>
         /// <returns>Updated gamestate</returns>
         public IState RevealTile(int x, int y);
+
+        /// <summary>
+        /// Toggles a flag on and off on a tile on the board
+        /// </summary>
+        /// <param name="x">X coordinate of the tile</param>
+        /// <param name="y">Y coordinate of the tile</param>
+        /// <returns>Updated gamestate</returns>
+        public IState ToggleFlag(int x, int y);
     };
 }

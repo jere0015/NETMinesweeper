@@ -6,6 +6,7 @@
         public int Y { get; }
         public bool IsRevealed { get; set; }
         public bool IsMine { get; }
+        public bool IsFlagged { get; set; }
 
         public Tile(int x, int y, bool isMine)
         {
@@ -13,6 +14,7 @@
             Y = y;
             IsMine = isMine;
             IsRevealed = false;
+            IsFlagged = false;
         }
     }
 }

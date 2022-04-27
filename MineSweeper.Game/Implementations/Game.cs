@@ -81,5 +81,24 @@
 
             return random.Next(0, 4) == 0;
         }
+
+        public IState ToggleFlag(int x, int y)
+        {
+            if (State == null || State.Stage != Stage.Active)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var tile = State.Board.GetTile(x, y);
+
+            if(tile.IsRevealed)
+            {
+                throw new InvalidOperationException("Cannot place flags on revealed tiles");
+            }
+
+            tile.IsFlagged = !tile.IsFlagged;
+
+            return State;
+        }
     }
 }

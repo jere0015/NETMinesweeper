@@ -17,6 +17,8 @@ namespace MineSweeper.Game.Implementations
         RevealTile,
 
         ToggleFlag,
+
+        StartGame,
     }
 
     public abstract class GameClient : IGameClient
@@ -45,6 +47,9 @@ namespace MineSweeper.Game.Implementations
             return Dispatch(CommandFactory.Create(CommandType.ToggleFlag, x, y));
         }
 
-
+        public IState PlaceFlag(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
