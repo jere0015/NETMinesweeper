@@ -11,17 +11,11 @@ jobs:
     steps:
         - uses: actions/checkout@v2
         
-        - name: "Print1"
-          run: ls
-
         - name: "Restore"
           run: dotnet restore
 
         - name: "Build"
           run: dotnet build --no-restore
-
-        - name: "Print2"
-          run: ls
 
         - name: "Test"
           run: dotnet test
