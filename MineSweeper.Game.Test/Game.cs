@@ -1,9 +1,7 @@
 ﻿using Xunit;
 using Xunit.Abstractions;
 
-using MineSweeper.Game;
-
-namespace MineSweeper.Test
+namespace MineSweeper.Game.Test
 {
     public class GameTest
     {
@@ -19,7 +17,7 @@ namespace MineSweeper.Test
 
         public IGame Instance()
         {
-            var game = new Game.Game(_config);
+            var game = new Game(_config);
 
             return game;
         }
