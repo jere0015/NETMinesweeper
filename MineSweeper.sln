@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.Blazor.Server",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C5EA8D7D-4552-438C-B0BA-698B4D333132}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.Game.Server", "MineSweeper.Game.Server\MineSweeper.Game.Server.csproj", "{18995CA2-2723-4087-9A70-BA46738D7CDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.API.Game", "MineSweeper.API.Game\MineSweeper.API.Game.csproj", "{18995CA2-2723-4087-9A70-BA46738D7CDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

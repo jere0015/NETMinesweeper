@@ -1,5 +1,3 @@
-#NOTE1: Docker file is placed here, because the COPY instruction does not support relative pathing fully
-
 # Build code
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 

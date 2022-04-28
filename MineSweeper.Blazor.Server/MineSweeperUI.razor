@@ -1,11 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Hosting;
 @using Microsoft.Extensions.Hosting;
 @inject ILogger<MineSweeperUI> _logger
+@inject IRepository<Score> _scoreRepository
 @inject IGameFactory _gameFactory
 @inject IWebHostEnvironment _env
 
 <h3>MineSweeper</h3>
 <button @onclick="@StartGame">Start game</button>
+
+@foreach(var score in _scoreRepository.Items())
+{
+	<div style="justify-content:center">@score.Holder @score.Amount</div>
+}
 
 <div style="display:flex; flex-direction:column; justify-content:center; width:100px;">
 
@@ -64,6 +70,10 @@
 
 		case Stage.Won:
 			<div>You win!</div>
+			break;
+
+		default:
+			
 			break;
 	}
 }

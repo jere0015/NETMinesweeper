@@ -6,18 +6,42 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddSingleton<IGameFactory, GameFactory>();
-
-var app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
+if(builder.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
+    // Use the game engine library
+    builder.Services.AddSingleton<IGameFactory, GameFactory>();
+    // Use memory repository
+    builder.Services.AddSingleton<IRepository<Score>, MemoryRepository<Score>>();
 }
 else
 {
-    //Environment.SetEnvironmentVariable("APIURL", "https://localhost:7055/Game/");
+    // Use proxy / client to communicate with game
+    builder.Services.AddSingleton<IGameFactory, GameProxyFactory>();
+
+    //TODO: Use database repository
+    builder.Services.AddSingleton<IRepository<Score>, MemoryRepository<Score>>();
+}
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    // Seed some score data
+    var repo = app.Services.GetService<IRepository<Score>>();
+
+    if(repo != null)
+    {
+        repo.Create(new Score { Holder = "Person1", Amount = 100 });
+        repo.Create(new Score { Holder = "Person2", Amount = 200 });
+        repo.Create(new Score { Holder = "Person3", Amount = 300 });
+        repo.Create(new Score { Holder = "Person4", Amount = 400 });
+        repo.Create(new Score { Holder = "Person5", Amount = 400 });
+    }
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
