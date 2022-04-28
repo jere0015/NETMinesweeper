@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Build"
-      run: |
-        dotnet restore
-        dotnet build
+        run: |
+          dotnet restore
+          dotnet build
       - name: "Test"
-      run: |
-        dotnet test
+        run: |
+          dotnet test
 
