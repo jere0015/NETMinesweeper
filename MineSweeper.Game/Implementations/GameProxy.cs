@@ -7,45 +7,73 @@ using System.Net;
 using System.Text.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
-namespace MineSweeper.Game.Implementations
+
+namespace MineSweeper.Game
 {
     public class GameProxy : IGame
     {
-        public GameProxy(HttpClient httpClient)
+        public State State { get; private set; }
+        public HttpClient HttpClient { get; }
+
+        public GameProxy(State state, HttpClient httpClient)
         {
+            State = state;
+
             HttpClient = httpClient;
         }
 
-        public State State  { get; private set; }
+        public static async Task<GameProxy> StartGame(HttpClient httpClient, Config config)
+        {
+            var state = await SendGameMessage(httpClient, "start_game", config);
 
-        public HttpClient HttpClient { get; }
+            return new GameProxy(state, httpClient);
+        }
+
+        public static async Task<State> RevealTileAsync(HttpClient httpClient, int x, int y)
+        {
+            return await SendGameMessage(httpClient, "reveal_tile", new { x = x, y = y, });
+        }
+
+        public static async Task<State> ToggleFlagAsync(HttpClient httpClient, int x, int y)
+        {
+            return await SendGameMessage(httpClient, "toggle_flag", new { x = x, y = y, });
+        }
+
 
         public void RevealTile(int x, int y)
         {
-            var content = new
-            {
-                x = x,
-                y = y,
-            };
-
-            var resp = HttpClient.PostAsync("reveal_tile", JsonSerializer.Serialize(content));
-            var response = client.PostAsync("api/AgentCollection", new StringContent(
-                new JavaScriptSerializer().Serialize(user), Encoding.UTF8, "application/json")).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                var content = response.Content.ReadAsStringAsync().Result;
-
-                State = JsonSerializer.Deserialize<State>(content);
-            }
+            State = Task.Run(() =>  RevealTileAsync(HttpClient, x, y)).Result;
         }
 
         public void ToggleFlag(int x, int y)
         {
-            throw new NotImplementedException();
+            State = Task.Run( () => ToggleFlagAsync(HttpClient, x, y)).Result;
         }
 
-        private async void Post()
+        public static async Task<State> SendGameMessage(HttpClient httpClient, string uri, object data)
         {
+            var json = JsonSerializer.Serialize(data);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var request = await httpClient.PostAsync(uri, content);
+
+            if (request.IsSuccessStatusCode)
+            {
+                var response = await request.Content.ReadAsStringAsync();
+
+                if (response != null)
+                {
+                    var deserializedState = JsonSerializer.Deserialize<State>(response, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+                    if (deserializedState != null)
+                    {
+                        return deserializedState;
+                    }
+                }
+            }
+
+            throw new InvalidOperationException("Failed Posting message to game server");
         }
     }
 }

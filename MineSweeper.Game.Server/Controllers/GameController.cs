@@ -20,6 +20,8 @@ public class GameController : ControllerBase
     [HttpGet("get_state")]
     public ActionResult<State> GetState()
     {
+        _logger.LogInformation("User requested state");
+
         if (Game?.State == null)
             return BadRequest("No state");
 
@@ -29,6 +31,8 @@ public class GameController : ControllerBase
     [HttpPost("start_game")]
     public ActionResult<State> StartGame(Config config)
     {
+        _logger.LogInformation("User requested StartGame");
+
         Game = _gameFactory.Create(config);
 
         OnStateChanged();
@@ -40,9 +44,11 @@ public class GameController : ControllerBase
     }
 
     [HttpPost("reveal_tile")]
-    public ActionResult<State> RevealTile(int x, int y)
+    public ActionResult<State> RevealTile(Point point)
     {
-        Game?.RevealTile(x, y);
+        _logger.LogInformation($"User requested RevealTile x: {point.X} y: {point.Y}");
+
+        Game.RevealTile(point.Y, point.Y);
 
         OnStateChanged();
 
@@ -53,9 +59,11 @@ public class GameController : ControllerBase
     }
 
     [HttpPost("toggle_flag")]
-    public ActionResult<State> ToggleFlag(int x, int y)
+    public ActionResult<State> ToggleFlag(Point point)
     {
-        Game?.ToggleFlag(x, y);
+        _logger.LogInformation("User requested ToggleFlag");
+
+        Game.ToggleFlag(point.Y, point.Y);
         
         OnStateChanged();
 
@@ -65,18 +73,30 @@ public class GameController : ControllerBase
         return Game.State;
     }
 
-    private IGame? Game
+    private IGame _game = null;
+    private IGame Game
     {
         get
         {
-            var serialized = HttpContext.Session.GetString("game");
+            if(_game == null)
+			{
+                var serialized = HttpContext.Session.GetString("game");
 
-            if (serialized != null)
-            {
-                return JsonSerializer.Deserialize<Game>(serialized);
+                if (serialized != null)
+                {
+                    var deserialized = JsonSerializer.Deserialize<Game>(serialized);
+
+                    if (deserialized != null)
+                        _game = deserialized;
+                }
             }
 
-            return null;
+            if(_game == null)
+			{
+                throw new InvalidOperationException("No 'Game' object in session");
+			}
+
+            return _game;
         }
         set
         {
@@ -85,12 +105,11 @@ public class GameController : ControllerBase
             HttpContext.Session.SetString("game", serialized);
         }
     }
-
     private void OnStateChanged()
     {
-        if (Game != null)
+        if (_game != null)
         {
-            var serialized = JsonSerializer.Serialize(Game);
+            var serialized = JsonSerializer.Serialize(_game);
 
             HttpContext.Session.SetString("game", serialized);
         }

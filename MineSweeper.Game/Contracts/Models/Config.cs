@@ -8,6 +8,7 @@
         public int Seed { get; }
         public Difficulity Difficulity { get; }
 
+	
         public Config(int boardWidth, int boardHeight, int seed, Difficulity difficulity)
         {
             BoardWidth = boardWidth;

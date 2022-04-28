@@ -9,10 +9,10 @@
 	{
 		case Stage.Playing:
 			<table>
-				@for (var x = 0; x < game.State.Board.Width; x++)
+				@for (int y = 0; y < game.State.Board.Height; y++)
 				{
 					<tr>
-						@for (int y = 0; y < game.State.Board.Height; y++)
+						@for (var x = 0; x < game.State.Board.Width; x++)
 						{
 							var tile = game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
 
@@ -21,8 +21,8 @@
 							int _y = y;
 
 							<td @onclick="()=>RevealTile(_x, _y)" @oncontextmenu="()=>PlaceFlag(_x, _y)"
-								@oncontextmenu:preventDefault="true">
-								
+			@oncontextmenu:preventDefault="true">
+
 								@if (tile.IsRevealed)
 								{
 									if (tile.IsMine)
@@ -63,9 +63,9 @@
 }
 
 @code {
-	
+
 	IGame? game = null;
-	
+
 	Config config = new Config(5, 5, 0, Difficulity.Easy);
 
 	// Handlerss
@@ -81,6 +81,8 @@
 			_logger.LogInformation($"Revealing tile at {x} {y}");
 
 			game.RevealTile(x, y);
+
+			this.StateHasChanged();
 		}
 	}
 
@@ -91,6 +93,8 @@
 			_logger.LogInformation($"Placing flag at {x} {y}");
 
 			game.ToggleFlag(x, y);
+
+			this.StateHasChanged();
 		}
 	}
 }
