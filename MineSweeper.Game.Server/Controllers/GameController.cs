@@ -48,7 +48,7 @@ public class GameController : ControllerBase
     {
         _logger.LogInformation($"User requested RevealTile x: {point.X} y: {point.Y}");
 
-        Game.RevealTile(point.Y, point.Y);
+        Game.RevealTile(point.X, point.Y);
 
         OnStateChanged();
 
@@ -61,9 +61,9 @@ public class GameController : ControllerBase
     [HttpPost("toggle_flag")]
     public ActionResult<State> ToggleFlag(Point point)
     {
-        _logger.LogInformation("User requested ToggleFlag");
+        _logger.LogInformation($"User requested ToggleFlag x: {point.X} y: {point.Y}");
 
-        Game.ToggleFlag(point.Y, point.Y);
+        Game.ToggleFlag(point.X, point.Y);
         
         OnStateChanged();
 

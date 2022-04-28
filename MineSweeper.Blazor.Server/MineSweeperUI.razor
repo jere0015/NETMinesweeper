@@ -1,5 +1,8 @@
-﻿@inject ILogger<MineSweeperUI> _logger
+﻿@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.Extensions.Hosting;
+@inject ILogger<MineSweeperUI> _logger
 @inject IGameFactory _gameFactory
+@inject IWebHostEnvironment _env
 
 <h3>MineSweeper</h3>
 <button @onclick="@StartGame">Start game</button>
@@ -61,6 +64,31 @@
 			break;
 	}
 }
+
+@if (_env.IsDevelopment())
+{
+	<table>
+		@for (int y = 0; y < game?.State.Board.Height; y++)
+		{
+			<tr>
+				@for (var x = 0; x < game.State.Board.Width; x++)
+				{
+					var tile = game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
+
+					if (tile.IsMine)
+					{
+						<td>X</td>
+					}
+					else
+					{
+						<td>@tile.Neighbourghs(game.State.Board).Where(_ => _.IsMine).Count()</td>
+					}
+				}
+			</tr>
+		}
+	</table>
+}
+
 
 @code {
 
