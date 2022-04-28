@@ -10,8 +10,7 @@ jobs:
 
     steps:
         - name: "Print1"
-          run: |
-            ls -la
+          run: ls
 
         - name: "Restore"
           run: dotnet restore
@@ -20,7 +19,7 @@ jobs:
           run: dotnet build --no-restore
 
         - name: "Print2"
-          run: ls -la
+          run: ls
 
         - name: "Test"
           run: dotnet test
