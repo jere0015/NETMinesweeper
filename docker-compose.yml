@@ -1,0 +1,21 @@
+services:
+
+  MineSweeper.Game.Server:
+    image: mgs
+    build:
+      dockerfile: Docker/Production/MineSweeper.Game.Server.Dockerfile
+      context: .
+    ports:
+      - "8081:80"
+  
+  MineSweeper.Blazor.Server:
+    image: mbs
+    build: 
+      dockerfile: Docker/Production/MineSweeper.Blazor.Server.Dockerfile
+      context: .
+    ports:
+      - "8080:80"
+    environment:
+      - APIURL=http://MineSweeper.Game.Server:80/Game/
+    depends_on:
+      - MineSweeper.Game.Server

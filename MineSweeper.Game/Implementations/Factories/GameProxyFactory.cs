@@ -10,11 +10,11 @@ namespace MineSweeper.Game
     {
         public IGame Create()
         {
-            var apiUrl = Environment.GetEnvironmentVariable("api");
+            var apiUrl = Environment.GetEnvironmentVariable("APIURL");
 
             if (apiUrl  == null)
 			{
-                throw new ArgumentException("Missing 'api' url in enviromental variables");
+                throw new ArgumentException("Missing APIURL in enviromental variables");
 			}
             
             var httpClient = new HttpClient();
@@ -28,11 +28,11 @@ namespace MineSweeper.Game
 
         public IGame Create(Config config)
         {
-            var apiUrl = Environment.GetEnvironmentVariable("api");
+            var apiUrl = Environment.GetEnvironmentVariable("APIURL");
 
             if (apiUrl == null)
             {
-                throw new ArgumentException("Missing 'api' url in enviromental variables");
+                throw new ArgumentException("Missing APIURL in enviromental variables");
             }
 
             var httpClient = new HttpClient();

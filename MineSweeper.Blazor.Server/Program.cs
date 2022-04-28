@@ -17,7 +17,7 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    Environment.SetEnvironmentVariable("api", "https://localhost:7055/Game/");
+    //Environment.SetEnvironmentVariable("APIURL", "https://localhost:7055/Game/");
 }
 
 app.UseHttpsRedirection();
