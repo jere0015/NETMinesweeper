@@ -5,14 +5,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  CICD:
     runs-on: ubuntu-latest
+
     steps:
-      - name: "Build"
-      run: |
-        dotnet restore
-        dotnet build
-      - name: "Test"
-      run: |
-        dotnet test
+        - uses: actions/checkout@v2
+        
+        - name: "Restore"
+          run: dotnet restore
+
+        - name: "Build"
+          run: dotnet build --no-restore
+
+        - name: "Test"
+          run: dotnet test
 
