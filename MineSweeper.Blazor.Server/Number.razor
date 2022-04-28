@@ -1,0 +1,30 @@
+﻿
+@switch(Count)
+{
+    case 0:
+        textStyle = "display: none";
+
+        break;
+    case 1:
+        textStyle = "color: blue";
+        break;
+    case 2:
+        textStyle = "color: green";
+        break;
+    case 3:
+        textStyle = "color: red";
+        break;
+    default:
+        textStyle = "color: black";
+        break;
+}
+
+
+<div style=@textStyle>@Count</div>
+
+@code {
+    string textStyle = "none";
+
+    [Parameter]
+    public int Count { get; set; }
+}

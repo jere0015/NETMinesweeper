@@ -6,6 +6,9 @@
 
 <h3>MineSweeper</h3>
 <button @onclick="@StartGame">Start game</button>
+
+<div style="display:flex; flex-direction:column; justify-content:center; width:100px;">
+
 @if (game?.State != null)
 {
 	switch (game.State.Stage)
@@ -30,22 +33,22 @@
 								{
 									if (tile.IsMine)
 									{
-										<div>X,</div>
+										<Mine />
 									}
 									else
 									{
-										<div>@tile.Neighbourghs(game.State.Board).Where(_ => _.IsMine).Count()</div>
+										<Number Count=@tile.Neighbourghs(game.State.Board).Where(_ => _.IsMine).Count() />
 									}
 								}
 								else // Tile not revealed
 								{
 									if (tile.IsFlagged)
 									{
-										<div>F,</div>
+										<Flag />
 									}
 									else
 									{
-										<div>?,</div>
+										<UnrevealedTile />
 									}
 								}
 							</td>
@@ -64,31 +67,7 @@
 			break;
 	}
 }
-
-@if (_env.IsDevelopment())
-{
-	<h5>Shown only in Debug build:</h5>
-	<table>
-		@for (int y = 0; y < game?.State.Board.Height; y++)
-		{
-			<tr>
-				@for (var x = 0; x < game.State.Board.Width; x++)
-				{
-					var tile = game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
-
-					if (tile.IsMine)
-					{
-						<td>X</td>
-					}
-					else
-					{
-						<td>@tile.Neighbourghs(game.State.Board).Where(_ => _.IsMine).Count()</td>
-					}
-				}
-			</tr>
-		}
-	</table>
-}
+</div>
 
 
 @code {
