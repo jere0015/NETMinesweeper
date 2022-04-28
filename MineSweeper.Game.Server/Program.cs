@@ -2,6 +2,7 @@ using MineSweeper.Game;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddSingleton<IGameFactory, GameFactory>();
 builder.Services.AddControllers();

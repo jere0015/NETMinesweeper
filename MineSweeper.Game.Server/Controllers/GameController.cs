@@ -73,7 +73,7 @@ public class GameController : ControllerBase
         return Game.State;
     }
 
-    private IGame _game = null;
+    private IGame? _game = null;
     private IGame Game
     {
         get

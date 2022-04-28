@@ -39,7 +39,6 @@ namespace MineSweeper.Game
             return await SendGameMessage(httpClient, "toggle_flag", new { x = x, y = y, });
         }
 
-
         public void RevealTile(int x, int y)
         {
             State = Task.Run(() =>  RevealTileAsync(HttpClient, x, y)).Result;

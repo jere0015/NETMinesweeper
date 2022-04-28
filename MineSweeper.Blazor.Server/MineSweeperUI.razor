@@ -67,6 +67,7 @@
 
 @if (_env.IsDevelopment())
 {
+	<h5>Shown only in Debug build:</h5>
 	<table>
 		@for (int y = 0; y < game?.State.Board.Height; y++)
 		{
@@ -109,8 +110,6 @@
 			_logger.LogInformation($"Revealing tile at {x} {y}");
 
 			game.RevealTile(x, y);
-
-			this.StateHasChanged();
 		}
 	}
 
@@ -121,8 +120,6 @@
 			_logger.LogInformation($"Placing flag at {x} {y}");
 
 			game.ToggleFlag(x, y);
-
-			this.StateHasChanged();
 		}
 	}
 }

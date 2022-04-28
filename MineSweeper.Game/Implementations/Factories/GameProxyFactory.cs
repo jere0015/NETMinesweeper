@@ -10,9 +10,16 @@ namespace MineSweeper.Game
     {
         public IGame Create()
         {
+            var apiUrl = Environment.GetEnvironmentVariable("api");
+
+            if (apiUrl  == null)
+			{
+                throw new ArgumentException("Missing 'api' url in enviromental variables");
+			}
+            
             var httpClient = new HttpClient();
 
-            httpClient.BaseAddress = new Uri("https://localhost:7055/Game/");
+            httpClient.BaseAddress = new Uri(apiUrl);
 
             var defaultConfig = new Config(10, 10, (int)DateTime.Now.Ticks, Difficulity.Easy);
 
@@ -21,9 +28,16 @@ namespace MineSweeper.Game
 
         public IGame Create(Config config)
         {
+            var apiUrl = Environment.GetEnvironmentVariable("api");
+
+            if (apiUrl == null)
+            {
+                throw new ArgumentException("Missing 'api' url in enviromental variables");
+            }
+
             var httpClient = new HttpClient();
 
-            httpClient.BaseAddress = new Uri("https://localhost:7055/Game/");
+            httpClient.BaseAddress = new Uri(apiUrl);
 
             return Task.Run(() => GameProxy.StartGame(httpClient, config)).Result;
         }
