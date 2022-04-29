@@ -1,23 +1,28 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+﻿<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">NETMinesweeper</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
 
+      <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span aria-hidden="true"></span> Play
+        <li class="nav-item">
+            <NavLink class="nav-link active" href="" Match="NavLinkMatch.All">
+                <span class="visually-hidden">(current)</span> Play
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="leaderboard">
-                <span aria-hidden="true"></span> Leaderboard
+                Leaderboard
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="profile">
-                <span aria-hidden="true"></span> Profile
+                Profile
             </NavLink>
         </li>
       </ul>
+    </div>
   </div>
 </nav>
