@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C5EA8D7D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.API.Game", "MineSweeper.API.Game\MineSweeper.API.Game.csproj", "{18995CA2-2723-4087-9A70-BA46738D7CDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSweeper.API.Score", "MineSweeper.API.Score\MineSweeper.API.Score.csproj", "{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{18995CA2-2723-4087-9A70-BA46738D7CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18995CA2-2723-4087-9A70-BA46738D7CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18995CA2-2723-4087-9A70-BA46738D7CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{4F318372-1109-4116-944D-FC6A2789D4D3} = {8174AEAE-E16A-4DF0-AD7C-965FC94802A8}
 		{8C2A4BB3-72AD-4A4D-AD57-6AFC78F016B5} = {E0C8A7C3-D504-417F-B0DF-D06F7B64C85F}
 		{18995CA2-2723-4087-9A70-BA46738D7CDA} = {8174AEAE-E16A-4DF0-AD7C-965FC94802A8}
+		{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC} = {8174AEAE-E16A-4DF0-AD7C-965FC94802A8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF1595B5-45BB-4834-B97C-E600D4443978}
