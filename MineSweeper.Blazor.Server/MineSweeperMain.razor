@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.Extensions.Hosting;
+@inject ILogger<MineSweeperMain> _logger
+@inject IGameFactory _gameFactory
+@inject IWebHostEnvironment _env
+
+
+@if (game != null)
+{
+	switch (game.State.Stage)
+	{
+		case Stage.Playing:
+			<MineSweeperBoard @bind-Game=@game />
+			break;
+
+		case Stage.Lost:
+
+			<h3>MineSweeper</h3>
+			<button @onclick="@StartGame">Start game</button>
+
+			<div>You lost!</div>
+			<ScoreBoard />
+			break;
+
+		case Stage.Won:
+			<h3>MineSweeper</h3>
+			<button @onclick="@StartGame">Start game</button>
+
+			<div>You win!</div>
+			<ScoreBoard />
+			break;
+
+	}
+}
+else
+{
+	<h3>MineSweeper</h3>
+	<button @onclick="@StartGame">Start game</button>
+
+}
+
+@code {
+
+	IGame? game = null;
+
+	Config config = new Config(5, 5, 0, Difficulity.Easy);
+
+	// Handlerss
+	void StartGame()
+	{
+		game = _gameFactory.Create(config);
+	}
+}

@@ -1,0 +1,134 @@
+﻿@inject ILogger<MineSweeperBoard> _logger
+
+
+@*<div style="display:flex; flex-direction:column; height:100%">
+	@if (Game != null)
+	{
+	
+		@for (int y = 0; y < Game.State.Board.Height; y++)
+		{
+			<div style="display:flex; flex-direction:row; height:100%">
+				@for (var x = 0; x < Game.State.Board.Width; x++)
+				{
+					var tile = Game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
+
+					int _x = x;
+					int _y = y;
+
+					<div style="width:100%" 
+						@onclick="()=>RevealTile(_x, _y)" 
+						@oncontextmenu="()=>PlaceFlag(_x, _y)" 
+						@oncontextmenu:preventDefault="true">
+
+						@if (tile.IsRevealed)
+						{
+							if (tile.IsMine)
+							{
+								<Mine />
+							}
+							else
+							{
+								<Number Count=@tile.Neighbourghs(Game.State.Board).Where(_ => _.IsMine).Count() />
+							}
+						}
+						else // Tile not revealed
+						{
+							if (tile.IsFlagged)
+							{
+								<Flag />
+							}
+							else
+							{
+								<UnrevealedTile />
+							}
+						}
+					</div>
+				}
+			</div>
+		}
+	}
+</div>*@
+
+
+<table>
+	@if (Game != null)
+	{
+
+		@for (int y = 0; y < Game.State.Board.Height; y++)
+		{
+			<tr>
+				@for (var x = 0; x < Game.State.Board.Width; x++)
+				{
+					var tile = Game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
+
+					//NOTE: https://stackoverflow.com/a/54813295
+					int _x = x;
+					int _y = y;
+
+					// Reveal tile on left click, and place flag on right click
+					<td @onclick="()=>RevealTile(_x, _y)" @oncontextmenu="()=>PlaceFlag(_x, _y)" @oncontextmenu:preventDefault="true"
+			style="padding:10px">
+
+						@if (tile.IsRevealed)
+						{
+							if (tile.IsMine)
+							{
+								<Mine />
+							}
+							else
+							{
+								<Number Count=@tile.Neighbourghs(Game.State.Board).Where(_ => _.IsMine).Count() />
+							}
+						}
+						else // Tile not revealed
+						{
+							if (tile.IsFlagged)
+							{
+								<Flag />
+							}
+							else
+							{
+								<UnrevealedTile />
+							}
+						}
+					</td>
+				}
+			</tr>
+		}
+	}
+</table>
+
+@code {
+	[Parameter]
+	public IGame? Game { get; set; }
+
+	// Needed for two-way binding
+	[Parameter]
+	public EventCallback<IGame> GameChanged { get; set; }
+
+	private async Task RevealTile(int x, int y)
+	{
+		if (Game?.State.Stage == Stage.Playing)
+		{
+			_logger.LogInformation($"Revealing tile at {x} {y}");
+
+			Game.RevealTile(x, y);
+
+			// Needed for two-way binding
+			await GameChanged.InvokeAsync(Game);
+		}
+	}
+
+	private async Task PlaceFlag(int x, int y)
+	{
+		if (Game?.State.Stage == Stage.Playing)
+		{
+			_logger.LogInformation($"Placing flag at {x} {y}");
+
+			Game.ToggleFlag(x, y);
+
+			// Needed for two-way binding
+			await GameChanged.InvokeAsync(Game);
+		}
+	}
+}
