@@ -96,5 +96,15 @@
 
             return new State(Stage.Playing, board, config);
         }
+
+        public void SubmitScore(string username)
+        {
+
+        }
+        
+        public List<string> GetScores(string username)
+        {
+            
+        }
     }
 }

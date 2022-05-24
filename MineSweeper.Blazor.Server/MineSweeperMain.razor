@@ -10,22 +10,26 @@
 	switch (game.State.Stage)
 	{
 		case Stage.Playing:
-			<MineSweeperBoard @bind-Game=@game />
+			<div style="width=20%; height=20%">
+				<MineSweeperBoard @bind-Game=@game />
+			</div>
 			break;
 
 		case Stage.Lost:
 
 			<h3>MineSweeper</h3>
 			<button @onclick="@StartGame">Start game</button>
-
 			<div>You lost!</div>
+
+			<p>Enter your name</p>
+			<button @onclick="()=>SubmitScore(username)">Submit score</button>
+			<input value="@username"/>
 			<ScoreBoard />
 			break;
 
 		case Stage.Won:
 			<h3>MineSweeper</h3>
 			<button @onclick="@StartGame">Start game</button>
-
 			<div>You win!</div>
 			<ScoreBoard />
 			break;
@@ -36,7 +40,6 @@ else
 {
 	<h3>MineSweeper</h3>
 	<button @onclick="@StartGame">Start game</button>
-
 }
 
 @code {
@@ -44,6 +47,15 @@ else
 	IGame? game = null;
 
 	Config config = new Config(5, 5, 0, Difficulity.Easy);
+
+	string username = "";
+
+	void SubmitScore(string username)
+	{
+		game.SubmitScore(username);
+
+		game = null;
+	}
 
 	// Handlerss
 	void StartGame()

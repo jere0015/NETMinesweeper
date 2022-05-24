@@ -14,19 +14,22 @@ public class ScoreController : ControllerBase
         _scoreRepository = scoreRepository;
     }
 
+    // GET: api/Score
     [HttpGet]
-    public ActionResult<IEnumerable<Score>> Get()
+    public async Task<ActionResult<IEnumerable<Score>>> GetScores()
     {
-        return Ok(_scoreRepository.Items());
+        return await _context.Scores.ToListAsync();
     }
 
+    // POST: api/Score
+    // To protect from overposting attacks, enable the specific properties you want to bind to, for
+    // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
     [HttpPost]
-    public IActionResult Post(Score score)
+    public async Task<ActionResult<Score>> PostScore(Score score)
     {
-        _logger.LogInformation("New score received");
+        _context.Scores.Add(score);
+        await _context.SaveChangesAsync();
 
-        _scoreRepository.Create(score);
-        
-        return Ok();
+        return CreatedAtAction("GetScore", new { id = score.Id }, score);
     }
 }

@@ -72,6 +72,21 @@ public class GameController : ControllerBase
 
         return Game.State;
     }
+    
+    [HttpPost("submit_score")]
+    public ActionResult<State> SubmitScore(string username)
+    {
+        _logger.LogInformation($"User submitted score with username: {score.username}");
+
+        Game.SubmitScore(username);
+
+        OnStateChanged();
+
+        if (Game?.State == null)
+            return BadRequest("No state");
+
+        return Game.State;
+    }
 
     private IGame? _game = null;
     private IGame Game

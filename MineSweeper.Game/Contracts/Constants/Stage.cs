@@ -5,6 +5,8 @@
     /// </summary>
     public enum Stage
     {
+        Pregame,
+
         // The user is currently playing the game
         Playing,
 

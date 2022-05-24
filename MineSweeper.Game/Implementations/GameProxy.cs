@@ -38,6 +38,11 @@ namespace MineSweeper.Game
         {
             return await SendGameMessage(httpClient, "toggle_flag", new { x = x, y = y, });
         }
+        
+        public static async Task<State> SubmitScoreAsync(HttpClient httpClient, string username)
+        {
+            return await SendGameMessage(httpClient, "submit_score", new { username=username });            
+        }
 
         public void RevealTile(int x, int y)
         {
@@ -47,6 +52,11 @@ namespace MineSweeper.Game
         public void ToggleFlag(int x, int y)
         {
             State = Task.Run( () => ToggleFlagAsync(HttpClient, x, y)).Result;
+        }
+        
+        public void SubmitScore(string username)
+        {
+            State = Task.Run( () => SubmitScoreAsync(HttpClient, username)).Result;
         }
 
         public static async Task<State> SendGameMessage(HttpClient httpClient, string uri, object data)
@@ -74,5 +84,6 @@ namespace MineSweeper.Game
 
             throw new InvalidOperationException("Failed Posting message to game server");
         }
+
     }
 }

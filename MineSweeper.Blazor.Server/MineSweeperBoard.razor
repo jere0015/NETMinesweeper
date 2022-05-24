@@ -1,55 +1,5 @@
 ﻿@inject ILogger<MineSweeperBoard> _logger
 
-
-@*<div style="display:flex; flex-direction:column; height:100%">
-	@if (Game != null)
-	{
-	
-		@for (int y = 0; y < Game.State.Board.Height; y++)
-		{
-			<div style="display:flex; flex-direction:row; height:100%">
-				@for (var x = 0; x < Game.State.Board.Width; x++)
-				{
-					var tile = Game.State.Board.Tiles.First(_ => _.X == x && _.Y == y);
-
-					int _x = x;
-					int _y = y;
-
-					<div style="width:100%" 
-						@onclick="()=>RevealTile(_x, _y)" 
-						@oncontextmenu="()=>PlaceFlag(_x, _y)" 
-						@oncontextmenu:preventDefault="true">
-
-						@if (tile.IsRevealed)
-						{
-							if (tile.IsMine)
-							{
-								<Mine />
-							}
-							else
-							{
-								<Number Count=@tile.Neighbourghs(Game.State.Board).Where(_ => _.IsMine).Count() />
-							}
-						}
-						else // Tile not revealed
-						{
-							if (tile.IsFlagged)
-							{
-								<Flag />
-							}
-							else
-							{
-								<UnrevealedTile />
-							}
-						}
-					</div>
-				}
-			</div>
-		}
-	}
-</div>*@
-
-
 <table>
 	@if (Game != null)
 	{
