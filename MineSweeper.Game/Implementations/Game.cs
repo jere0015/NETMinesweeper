@@ -1,8 +1,12 @@
-﻿namespace MineSweeper.Game
+﻿using System.Text;
+using System.Text.Json;
+
+namespace MineSweeper.Game
 {
     public class Game : IGame
     {
         public State State { get; set; }
+        public HttpClient HttpClient { get; }
 
         public Game()
         {
@@ -67,7 +71,7 @@
             if (State.Board.Tiles.All(_ => (_.IsRevealed || _.IsFlagged)))
             {
                 State.Stage = Stage.Won;
-                
+
                 return;
             }
         }
@@ -97,14 +101,52 @@
             return new State(Stage.Playing, board, config);
         }
 
-        public void SubmitScore(string username)
+        public static async void SubmitScoreAsync(string username)
         {
+            var httpClient = new HttpClient();
+
+            var json = JsonSerializer.Serialize(new Score
+            {
+                Holder = username,
+            });
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var request = await httpClient.PostAsync("http://localhost:50942", content);
 
         }
-        
-        public List<string> GetScores(string username)
+
+        public static async Task< List<Score>> GetScoresAsync(string username)
         {
-            
+            var httpClient = new HttpClient();
+            var request = await httpClient.GetAsync("http://localhost:50942");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var response = await request.Content.ReadAsStringAsync();
+
+                if (response != null)
+                {
+                    var deserializedListOfScores = JsonSerializer.Deserialize<List<Score>>(response, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+                    if (deserializedListOfScores != null)
+                    {
+                        return deserializedListOfScores;
+                    }
+                }
+            }
+            return new List<Score>();
+        }
+
+        void IGame.GetScores(string username)
+        {
+            Task.Run(() => GetScoresAsync(username));
+        }
+
+        public void SubmitScore(string username)
+        {
+            Task.Run(() => SubmitScoreAsync(username));
+
         }
     }
 }

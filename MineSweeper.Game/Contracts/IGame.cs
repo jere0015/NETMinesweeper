@@ -30,6 +30,9 @@
         /// </summary>
         /// <param name="username">Name user wants to be displayed on highscore list</param>
         public void SubmitScore(string username);
-    
+
+        public void GetScores(string username);
+
+
     };
 }

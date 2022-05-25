@@ -76,7 +76,7 @@ public class GameController : ControllerBase
     [HttpPost("submit_score")]
     public ActionResult<State> SubmitScore(string username)
     {
-        _logger.LogInformation($"User submitted score with username: {score.username}");
+        _logger.LogInformation($"User submitted score with username: {username}");
 
         Game.SubmitScore(username);
 

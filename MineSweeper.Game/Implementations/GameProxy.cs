@@ -39,10 +39,9 @@ namespace MineSweeper.Game
             return await SendGameMessage(httpClient, "toggle_flag", new { x = x, y = y, });
         }
         
-        public static async Task<State> SubmitScoreAsync(HttpClient httpClient, string username)
-        {
-            return await SendGameMessage(httpClient, "submit_score", new { username=username });            
-        }
+
+
+
 
         public void RevealTile(int x, int y)
         {
@@ -54,10 +53,7 @@ namespace MineSweeper.Game
             State = Task.Run( () => ToggleFlagAsync(HttpClient, x, y)).Result;
         }
         
-        public void SubmitScore(string username)
-        {
-            State = Task.Run( () => SubmitScoreAsync(HttpClient, username)).Result;
-        }
+        
 
         public static async Task<State> SendGameMessage(HttpClient httpClient, string uri, object data)
         {
@@ -85,5 +81,53 @@ namespace MineSweeper.Game
             throw new InvalidOperationException("Failed Posting message to game server");
         }
 
+        public static async void SubmitScoreAsync(string username)
+        {
+            var httpClient = new HttpClient();
+
+            var json = JsonSerializer.Serialize(new Score
+            {
+                Holder = username,
+            });
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var request = await httpClient.PostAsync("http://localhost:50942", content);
+
+        }
+
+        public static async Task<List<Score>> GetScoresAsync(string username)
+        {
+            var httpClient = new HttpClient();
+            var request = await httpClient.GetAsync("http://localhost:50942");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var response = await request.Content.ReadAsStringAsync();
+
+                if (response != null)
+                {
+                    var deserializedListOfScores = JsonSerializer.Deserialize<List<Score>>(response, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+                    if (deserializedListOfScores != null)
+                    {
+                        return deserializedListOfScores;
+                    }
+                }
+            }
+            return new List<Score>();
+        }
+
+
+        void IGame.GetScores(string username)
+        {
+            Task.Run(() => GetScoresAsync(username));
+        }
+
+        public void SubmitScore(string username)
+        {
+            Task.Run(() => SubmitScoreAsync(username));
+
+        }
     }
 }
