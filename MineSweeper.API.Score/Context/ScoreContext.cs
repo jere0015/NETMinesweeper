@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MineSweeper.API.Score.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MineSweeper.API.Score.Context
-
 {
     public class ScoreContext : DbContext
     {
@@ -17,9 +15,7 @@ namespace MineSweeper.API.Score.Context
 
         }
 
-        public DbSet<Models.Score> Scores { get; set; }
-
-
-
+        public DbSet<MineSweeper.Game.Score> Scores { get; set; }
     }
 }
+

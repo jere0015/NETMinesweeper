@@ -1,5 +1,9 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MineSweeper.Game
 {
@@ -96,7 +100,7 @@ namespace MineSweeper.Game
                 }
             }
 
-            var board = new Board(tiles, config.BoardWidth, config.BoardHeight);
+            var board = new Board(tiles as IEnumerable<Tile>, config.BoardWidth, config.BoardHeight);
 
             return new State(Stage.Playing, board, config);
         }
@@ -107,7 +111,7 @@ namespace MineSweeper.Game
 
             var json = JsonSerializer.Serialize(new Score
             {
-                Holder = username,
+                PlayerName = username,
             });
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -116,7 +120,7 @@ namespace MineSweeper.Game
 
         }
 
-        public static async Task< List<Score>> GetScoresAsync(string username)
+        public static async Task<List<Score>> GetScoresAsync(string username)
         {
             var httpClient = new HttpClient();
             var request = await httpClient.GetAsync("http://localhost:50942");
@@ -145,6 +149,7 @@ namespace MineSweeper.Game
 
         public void SubmitScore(string username)
         {
+            
             Task.Run(() => SubmitScoreAsync(username));
 
         }

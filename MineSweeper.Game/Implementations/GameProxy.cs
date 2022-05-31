@@ -38,10 +38,6 @@ namespace MineSweeper.Game
         {
             return await SendGameMessage(httpClient, "toggle_flag", new { x = x, y = y, });
         }
-        
-
-
-
 
         public void RevealTile(int x, int y)
         {
@@ -53,8 +49,6 @@ namespace MineSweeper.Game
             State = Task.Run( () => ToggleFlagAsync(HttpClient, x, y)).Result;
         }
         
-        
-
         public static async Task<State> SendGameMessage(HttpClient httpClient, string uri, object data)
         {
             var json = JsonSerializer.Serialize(data);
@@ -87,13 +81,12 @@ namespace MineSweeper.Game
 
             var json = JsonSerializer.Serialize(new Score
             {
-                Holder = username,
+                PlayerName = username,
             });
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var request = await httpClient.PostAsync("http://localhost:50942", content);
-
         }
 
         public static async Task<List<Score>> GetScoresAsync(string username)

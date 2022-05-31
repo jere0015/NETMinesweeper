@@ -8,6 +8,7 @@ namespace MineSweeper.Game
 {
     public class Score
     {
-        public string Holder { get; set; }
+        public int Id { get; set; }
+        public string PlayerName { get; set; }
     }
 }
