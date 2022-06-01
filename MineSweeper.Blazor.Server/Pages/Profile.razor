@@ -1,0 +1,9 @@
+﻿@page "/profile"
+@using MineSweeper.Blazor.Server.Authentication
+@attribute [Authorize(Roles = "Administrator,User")]
+
+<h3>Profile only visible for authorized users</h3>
+
+@code {
+
+}

@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C5EA8D7D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.API.Game", "MineSweeper.API.Game\MineSweeper.API.Game.csproj", "{18995CA2-2723-4087-9A70-BA46738D7CDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSweeper.API.Score", "MineSweeper.API.Score\MineSweeper.API.Score.csproj", "{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MineSweeper.API.Score", "MineSweeper.API.Score\MineSweeper.API.Score.csproj", "{BE09C0CE-DC7C-4CAD-8D8E-013B53D2F9FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
