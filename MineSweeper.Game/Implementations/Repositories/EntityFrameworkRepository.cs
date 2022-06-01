@@ -27,5 +27,11 @@ namespace MineSweeper.Game
 
             _dbContext.SaveChanges();
         }
+
+        public void Delete(T entity)
+        {
+            _dbContext.Remove(entity);
+            _dbContext.SaveChanges();
+        }
     }
 }

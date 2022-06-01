@@ -11,5 +11,7 @@ namespace MineSweeper.Game
         IEnumerable<T> Items();
 
         void Create(T entity);
+
+        void Delete(T entity);
     }
 }

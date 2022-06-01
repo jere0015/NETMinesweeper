@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ScoreContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("MineSweeperConn")));
 
-builder.Services.AddScoped<IRepository<MineSweeper.Game.Score>, EntityFrameworkRepository<MineSweeper.Game.Score>>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -18,6 +17,9 @@ if (builder.Environment.IsDevelopment())
 {
     // Use memory repository
     builder.Services.AddSingleton<IRepository<Score>, MemoryRepository<Score>>();
+} else
+{
+    builder.Services.AddScoped<IRepository<MineSweeper.Game.Score>, EntityFrameworkRepository<MineSweeper.Game.Score>>();
 }
 
 var app = builder.Build();

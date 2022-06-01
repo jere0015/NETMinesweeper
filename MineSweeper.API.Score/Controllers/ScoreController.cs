@@ -37,4 +37,12 @@ public class ScoreController : ControllerBase
         _scoreRepository.Create(score);
         return Ok();
     }
+
+    [HttpDelete]
+    public ActionResult DeleteScore(MineSweeper.Game.Score score) 
+    {
+        _scoreRepository.Delete(score);
+
+        return Ok();
+    }
 }
