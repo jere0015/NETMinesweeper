@@ -1,6 +1,7 @@
 ﻿@page "/administrator"
-@using MineSweeper.Blazor.Server.Authentication
 @attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Administrator</PageTitle>
 
 <h3>This secret page is only visible to users with administrator role</h3>
 
