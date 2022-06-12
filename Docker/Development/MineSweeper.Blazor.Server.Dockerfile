@@ -1,4 +1,3 @@
-
 # Build code
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
@@ -16,11 +15,9 @@ RUN dotnet restore
 # copy Blazor server code
 COPY MineSweeper.Blazor.Server .
 
-# publish
-RUN dotnet publish -c release -o Build
-
 # Run image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS asp
 WORKDIR /Code/MineSweeper.Blazor.Server/Build/
 COPY --from=build /Code/MineSweeper.Blazor.Server/Build/ .
-ENTRYPOINT ["dotnet", "MineSweeper.Blazor.Server.dll"]
+ENTRYPOINT ["dotnet watch", "--project MineSweeper.Blazor.Server"]
+
