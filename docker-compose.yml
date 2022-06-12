@@ -7,7 +7,9 @@ services:
       context: .
     ports:
       - "8081:80"
-  
+    networks:
+      - internal
+
   MineSweeper.Blazor.Server:
     image: mbs
     build: 
@@ -19,6 +21,9 @@ services:
       - APIURL=http://MineSweeper.API.Game:80/Game/
     depends_on:
       - MineSweeper.API.Game
+    networks:
+      - external
+      - internal
 
   MineSweeper.Score.API:
     image: msa
@@ -33,6 +38,8 @@ services:
       - DB_PASS=My_password_1
     depends_on:
       - MineSweeper.Score.Database
+    networks:
+      - internal
 
   MineSweeper.Score.Database:
     image: mcr.microsoft.com/mssql/server:latest
@@ -41,4 +48,13 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=My_password_1
+    networks:
+      - internal
 
+networks:
+  internal:
+    driver: bridge
+    internal: true
+
+  external:
+    driver: bridge
