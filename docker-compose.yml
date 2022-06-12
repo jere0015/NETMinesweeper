@@ -1,16 +1,36 @@
 services:
 
-  MineSweeper.Score.API:
+  MineSweeper.API.Game:
+    image: mag
+    build:
+      dockerfile: Docker/Production/MineSweeper.API.Game.Dockerfile
+      context: .
+    ports:
+      - "8081:80"
+  
+  MineSweeper.Blazor.Server:
     image: mbs
+    build: 
+      dockerfile: Docker/Production/MineSweeper.Blazor.Server.Dockerfile
+      context: .
+    ports:
+      - "8080:80"
+    environment:
+      - APIURL=http://MineSweeper.API.Game:80/Game/
+    depends_on:
+      - MineSweeper.API.Game
+
+  MineSweeper.Score.API:
+    image: msa
     build: 
       dockerfile: Docker/Production/MineSweeper.API.Score.Dockerfile
       context: .
     ports:
       - "8084:80"
     environment:
-      - DB_HOST=value
-      - DB_USER=value
-      - DB_PASS=value
+      - DB_HOST=MineSweeper.Score.Database
+      - DB_USER=sa
+      - DB_PASS=My_password_1
     depends_on:
       - MineSweeper.Score.Database
 
@@ -20,4 +40,5 @@ services:
       - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
+      - SA_PASSWORD=My_password_1
 
