@@ -31,11 +31,11 @@ if (app.Environment.IsDevelopment())
 
     if(repo != null)
     {
-        repo.Create(new Score { Holder = "Person1" });
-        repo.Create(new Score { Holder = "Person2" });
-        repo.Create(new Score { Holder = "Person3" });
-        repo.Create(new Score { Holder = "Person4" });
-        repo.Create(new Score { Holder = "Person5" });
+        repo.Create(new Score { PlayerName = "Person1" });
+        repo.Create(new Score { PlayerName = "Person2" });
+        repo.Create(new Score { PlayerName = "Person3" });
+        repo.Create(new Score { PlayerName = "Person4" });
+        repo.Create(new Score { PlayerName = "Person5" });
     }
 }
 else
