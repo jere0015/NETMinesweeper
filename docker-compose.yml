@@ -48,8 +48,14 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=My_password_1
+    volumes:
+      - score-data:/var/opt/mssql/data
     networks:
       - internal
+
+volumes:
+  score-data:
+    driver:local
 
 networks:
   internal:
